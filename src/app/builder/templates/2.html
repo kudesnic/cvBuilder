@@ -1,0 +1,104 @@
+<div class="container template template-1">
+	<div class="row">
+		<div class="col-md-8 content">
+			<div class="title" *ngIf="fieldsData.surName">
+				{{fieldsData.name}}
+				{{fieldsData.secName}}
+				{{fieldsData.surName}}
+			</div>
+			<div class=" infoBlock" *ngIf="fieldsData.whoIAm">
+				<h2>Who I am</h2>
+				<div>
+					{{fieldsData.whoIAm}}
+				</div>
+			</div>
+			<div class=" infoBlock" *ngIf="fieldsData.works.length>0">
+				<h2>Experience</h2>
+				<div *ngFor="let work of fieldsData.works; let i = index">
+					<div>
+						<h3 class="company-name d-inline">{{work.companyName}}</h3>
+						<div class="date d-inline  pull-right"  *ngIf="work.companyDateStart && work.companyDateEnd">{{work.companyDateStart.getDate()}}.{{work.companyDateStart.getMonth()}}.{{work.companyDateStart.getFullYear()}} - {{work.companyDateEnd.getDate()}}.{{work.companyDateEnd.getMonth()}}.{{work.companyDateEnd.getFullYear()}}</div>
+						<div class="clear"></div>
+					</div>
+					<div class="company-info" >
+						<a  *ngIf="work.email" href="mailto:{{work.companyEmail}}" class="email">work.companyEmail</a>
+						<span class="phone"  *ngIf="work.companyPhone">{{work.companyPhone}}</span>
+						<div class="address"  *ngIf="work.companyAddress">{{work.companyAddress}}</div>
+					</div>
+					<div class="duties"  *ngIf="work.workDuties"  [innerHtml]="work.workDuties"></div>
+				</div>
+			</div>
+			<div class=" infoBlock" *ngIf="fieldsData.studies.length>0">
+
+				<h2>Education</h2>
+				<div *ngFor="let education of fieldsData.studies; let i = index">
+					<div>
+						<h3 class="university-name d-inline "  *ngIf="education.universityName">{{education.universityName}}</h3>
+						<div class="date d-inline pull-right "  *ngIf="education.universityDateStart && education.universityDateEnd" >{{education.universityDateStart.getDate()}}.{{education.universityDateStart.getMonth()}}.{{education.universityDateStart.getFullYear()}} - {{education.universityDateEnd.getDate()}}.{{education.universityDateEnd.getMonth()}}.{{education.universityDateEnd.getFullYear()}}</div>
+						<div class="clear"></div>
+					</div>
+					<div class="direction"  *ngIf="education.universityDirection" >{{education.universityDirection}}</div>
+				</div>
+			</div>
+			<div class=" custom-block infoBlock" *ngIf="fieldsData.customBlocks.length>0">
+				<div *ngFor="let block of fieldsData.customBlocks; let i = index">
+					<h2 [innerHtml] = "block.customBlockName"></h2>
+					<div class="custom-block-text"  *ngIf="block.customBlockText" [innerHtml] = "block.customBlockText" ></div>
+				</div>
+			</div>
+			<div class=" languages-block infoBlock" *ngIf="fieldsData.languages.length>0">
+				<h2>Languages</h2>
+				<div *ngFor="let language of fieldsData.languages; let i = index">
+					<span [innerHtml] = "language.language"></span>
+					-
+					<span class="custom-block-text"  *ngIf="language.languageLevel" [innerHtml] = "language.languageLevel" ></span>
+				</div>
+			</div>
+			<div class="whyI infoBlock" *ngIf="fieldsData.whyI" >
+				<h2>Why I</h2>
+				<div [innerHtml] = "fieldsData.whyI"></div>
+			</div>
+			<div class="agreement infoBlock" *ngIf="fieldsData.agreement" [innerHtml] = "fieldsData.agreement"></div>
+
+		</div>
+		<div class="col-md-4 aside">
+
+			<cv-profile-img *ngIf="profileImageSrc" [profileImageSrc]="profileImageSrc"></cv-profile-img>
+			<div class="contacts">
+				<h2>Contacts</h2>
+				<span  *ngIf="fieldsData.address">
+					<i class="fa fa-map-marker" aria-hidden="true"></i>
+					{{fieldsData.address}}
+				</span>
+				<span   *ngIf="fieldsData.phone">
+					<i class="fa fa-mobile-phone" aria-hidden="true"></i>
+					{{fieldsData.phone}}
+				</span>
+				<span   *ngIf="fieldsData.phone2">
+					<i class="fa fa-mobile-phone" aria-hidden="true"></i>
+					{{fieldsData.phone2}}
+				</span>
+				<span   *ngIf="fieldsData.email">
+					<i class="fa fa-envelope" aria-hidden="true"></i>
+					{{fieldsData.email}}
+				</span>
+				<span   *ngIf="fieldsData.skype">
+					<i class="fa fa-skype" aria-hidden="true"></i>
+					{{fieldsData.skype}}
+				</span>
+				<span   *ngIf="fieldsData.facebook">
+					<i class="fa fa-facebook-official" aria-hidden="true"></i>
+					{{fieldsData.facebook}}
+				</span>
+				<span   *ngIf="fieldsData.twitter">
+					<i class="fa fa-twitter" aria-hidden="true"></i>
+					{{fieldsData.twitter}}
+				</span>
+			</div>
+			<div class="hobbies"  *ngIf="fieldsData.hobbies" >
+				<h2>Hobbies</h2>
+				<div class="" [innerHtml]="fieldsData.hobbies"></div>
+			</div>
+		</div>
+	</div>
+</div>

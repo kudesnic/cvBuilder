@@ -1,0 +1,131 @@
+h1 {
+  color: #369;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 250%;
+}
+.custom-inputs-block  .mat-input-container, .address-container ,.agrement-block .mat-input-container, .full-width-textarea {
+  width:100%
+}
+.wrap{
+  padding:0 0 50px 0;
+}
+.hidden{
+    display:none;
+}
+quill-editor{
+  display: block;
+}
+.ql-tooltip.ql-editing{
+  z-index: 9;
+}
+.builder{
+  padding-top:15px;
+  padding-bottom:15px;
+}
+.builder form fieldset{
+  padding:20px 0;
+}
+.builder .profile-image{
+  width:250px;
+  /*height:250px;*/
+  margin:auto;
+  cursor:pointer;
+}
+.builder .template .template-image{
+  width:150px;
+  margin:auto;
+  border:2px solid transparent;
+  cursor:pointer;
+}
+.builder .template input[type=radio]{
+  display: none;
+}
+.builder .template input[type=radio]:checked+label img{ border: 2px solid red; }
+
+.cssload-container{
+  position: absolute;
+  width:100%;
+  height:100%;
+}
+
+.cssload-whirlpool,
+.cssload-whirlpool::before,
+.cssload-whirlpool::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 3px solid rgb(204,204,204);
+  border-left-color: rgb(5,65,245);
+  border-radius: 2622px;
+  -o-border-radius: 2622px;
+  -ms-border-radius: 2622px;
+  -webkit-border-radius: 2622px;
+  -moz-border-radius: 2622px;
+}
+
+.cssload-whirlpool {
+  margin: -66px 0 0 -66px;
+  height: 131px;
+  width: 131px;
+  animation: cssload-rotate 1150ms linear infinite;
+  -o-animation: cssload-rotate 1150ms linear infinite;
+  -ms-animation: cssload-rotate 1150ms linear infinite;
+  -webkit-animation: cssload-rotate 1150ms linear infinite;
+  -moz-animation: cssload-rotate 1150ms linear infinite;
+}
+
+.cssload-whirlpool::before {
+  content: "";
+  margin: -60px 0 0 -60px;
+  height: 116px;
+  width: 116px;
+  animation: cssload-rotate 1150ms linear infinite;
+  -o-animation: cssload-rotate 1150ms linear infinite;
+  -ms-animation: cssload-rotate 1150ms linear infinite;
+  -webkit-animation: cssload-rotate 1150ms linear infinite;
+  -moz-animation: cssload-rotate 1150ms linear infinite;
+}
+
+.cssload-whirlpool::after {
+  content: "";
+  margin: -76px 0 0 -76px;
+  height: 147px;
+  width: 147px;
+  animation: cssload-rotate 2300ms linear infinite;
+  -o-animation: cssload-rotate 2300ms linear infinite;
+  -ms-animation: cssload-rotate 2300ms linear infinite;
+  -webkit-animation: cssload-rotate 2300ms linear infinite;
+  -moz-animation: cssload-rotate 2300ms linear infinite;
+}
+
+
+
+@keyframes cssload-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes cssload-rotate {
+  100% {
+    -o-transform: rotate(360deg);
+  }
+}
+
+@-ms-keyframes cssload-rotate {
+  100% {
+    -ms-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes cssload-rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes cssload-rotate {
+  100% {
+    -moz-transform: rotate(360deg);
+  }
+}

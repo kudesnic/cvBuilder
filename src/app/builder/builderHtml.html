@@ -1,0 +1,255 @@
+<div class="container builder">
+    <form [formGroup]="documentForm">
+        <div class="row">
+        <div class="col-md-4">
+            <div class="image">
+                <img #profileImage  src="assets/images/empty-profile.png" alt="" class="profile-image" (click)="this.profileImageInput.click()">
+                <input type="file"  hidden #profileImageInput formControlName="image" accept="image/jpeg,image/png,image/gif" (change)="imageChoosed($event)">
+            </div>
+        </div>
+        <div class="col-md-8 row">
+            <div class="col-md-12">
+                <h2>Contact info</h2>
+            </div>
+            <div class="col-md-4">
+
+                <md-input-container>
+                    <input mdInput  formControlName="name" placeholder="Name" value="">
+                </md-input-container>
+            </div>
+
+            <div class="col-md-4">
+
+                <md-input-container>
+                    <input mdInput  formControlName="secName" placeholder="Second Name" value="">
+                </md-input-container>
+            </div>
+            <div class="col-md-4">
+
+                <md-input-container>
+                    <input mdInput  formControlName="surName" placeholder="Surname" value="">
+                </md-input-container>
+            </div>
+            <div class="col-md-4">
+
+                <md-input-container>
+                    <input mdInput  formControlName="phone" placeholder="Phone" value="">
+                </md-input-container>
+            </div>
+            <div class="col-md-4">
+
+                <md-input-container>
+                    <input mdInput formControlName="phone2"  placeholder="Phone 2" value="">
+                </md-input-container>
+            </div>
+            <div class="col-md-4">
+
+                <md-input-container>
+                    <input mdInput formControlName="skype"  placeholder="Skype" value="">
+                </md-input-container>
+            </div>
+            <div class="col-md-4">
+                <md-input-container>
+                    <input mdInput formControlName="email"  placeholder="Email" value="">
+                </md-input-container>
+            </div>
+            <div class="col-md-4">
+                <md-input-container>
+                    <input mdInput formControlName="facebook"  placeholder="Facebook" value="">
+                </md-input-container>
+            </div>
+            <div class="col-md-4">
+                <md-input-container>
+                    <input mdInput formControlName="twitter"  placeholder="Twitter" value="">
+                </md-input-container>
+            </div>
+        </div>
+            <div class="col-md-12">
+                <md-input-container class="full-width-textarea">
+                    <textarea mdInput formControlName="whoIAm"  placeholder="Who I am" value=""></textarea>
+                </md-input-container>
+            </div>
+            <div class="col-md-12">
+                <md-input-container>
+                    <input mdInput formControlName="positions"  placeholder="Positions for which I apply" value="">
+
+                </md-input-container>
+            </div>
+            <div class="col-md-12">
+                <md-input-container class="full-width-textarea">
+                    <textarea mdInput formControlName="address"  placeholder="Address" value=""></textarea>
+                </md-input-container>
+            </div>
+            <fieldset #workss  class="col-md-12" formArrayName="works">
+                <h2>Work history</h2>
+                <div class="no-items" [ngClass]="{hidden:!noWorks}">
+                    No items in this part
+                </div>
+                <div class="works-form" *ngFor="let works of documentForm.controls.works.controls; let i = index">
+                    <button class="btn btn-danger" type="button" (click)="removeFields('works',i);">X</button>
+                    <div class="col-md-12">
+
+                        <md-input-container>
+                            <input mdInput type="text" placeholder="Company name" [formControl]="works.controls['companyName']">
+                        </md-input-container>
+
+                        <md-input-container>
+                            <input mdInput type="phone"  placeholder="Company phone" [formControl]="works.controls['companyPhone']">
+                        </md-input-container>
+                        <md-input-container>
+                            <input mdInput type="email"  placeholder="Company email" [formControl]="works.controls['companyEmail']">
+                        </md-input-container>
+                        <br>
+                        <md-input-container class="address-container">
+                            <textarea mdInput placeholder="Company address"  [formControl]="works.controls['companyAddress']"></textarea>
+                        </md-input-container>
+                        <br>
+                        <h4>Duties</h4>
+                        <quill-editor  mdInput  placeholder="Duties"  [formControl]="works.controls['workDuties']"></quill-editor>
+
+                        <br>
+                        <md-input-container>
+                            <input mdInput placeholder="Start work date"  [formControl]="works.controls['companyDateStart']" [mdDatepicker]="pickerStart" >
+                            <button mdSuffix [mdDatepickerToggle]="pickerStart"></button>
+                        </md-input-container>
+
+
+                        <md-datepicker #pickerStart startView="year" ></md-datepicker>
+                        <md-input-container>
+                            <input mdInput  placeholder="End work date"  [formControl]="works.controls['companyDateEnd']" [mdDatepicker]="pickerEnd" >
+                            <button mdSuffix [mdDatepickerToggle]="pickerEnd"></button>
+                        </md-input-container>
+                        <md-datepicker #pickerEnd startView="year" ></md-datepicker>
+                    </div>
+                </div>
+                <button   class="btn btn-primary" (click)="addFields('works');">+</button>
+            </fieldset>
+
+            <fieldset  class="col-md-12" formArrayName="studies">
+                <h2>Studies history</h2>
+                <div class="no-items" [ngClass]="{hidden:!noStudies}">
+                    No items in this part
+                </div>
+                <div class="studies-form" *ngFor="let studies of documentForm.controls.studies.controls; let i = index">
+                    <button class="btn btn-danger" type="button" (click)="removeFields('studies',i);">X</button>
+
+                    <br>
+                    <div class="col-md-12">
+                        <md-input-container>
+                            <input mdInput type="text"  placeholder="Institution" [formControl]="studies.controls['universityName']">
+                        </md-input-container>
+
+                        <md-input-container>
+                            <input mdInput type="text"  placeholder="Direction" [formControl]="studies.controls['universityDirection']">
+                        </md-input-container>
+
+                        <md-input-container>
+                            <input mdInput type="text"  placeholder="Degree" [formControl]="studies.controls['universityDegree']">
+                        </md-input-container>
+
+                        <md-input-container>
+                            <input mdInput placeholder="Start studying date"  [formControl]="studies.controls['universityDateStart']" [mdDatepicker]="pickerStart" >
+                            <button mdSuffix [mdDatepickerToggle]="pickerStart"></button>
+                        </md-input-container>
+                        <md-datepicker #pickerStart startView="year" ></md-datepicker>
+                        
+                        <md-input-container>
+                            <input mdInput  placeholder="End studying date"  [formControl]="studies.controls['universityDateEnd']" [mdDatepicker]="pickerEnd" >
+                            <button mdSuffix [mdDatepickerToggle]="pickerEnd"></button>
+                        </md-input-container>
+
+
+                        <md-datepicker #pickerEnd startView="year" ></md-datepicker>
+                    </div>
+                </div>
+                <button  class="btn btn-primary" (click)="addFields('studies');">+</button>
+            </fieldset>
+            <fieldset  class="col-md-12" formArrayName="languages">
+                <h2>Languages</h2>
+                <div class="no-items" [ngClass]="{hidden:!noLanguages}">
+                    No items in this part
+                </div>
+                <div class="languages-form" *ngFor="let languages of documentForm.controls.languages.controls; let i = index">
+                    <button class="btn btn-danger" type="button" (click)="removeFields('languages',i);">X</button>
+
+                    <br>
+                    <div class="col-md-12">
+                        <md-input-container>
+                            <input mdInput type="text"  placeholder="Language" [formControl]="languages.controls['language']">
+                        </md-input-container>
+
+                        <md-input-container>
+                            <input mdInput type="text"  placeholder="Language level" [formControl]="languages.controls['languageLevel']">
+                        </md-input-container>
+
+
+                    </div>
+                </div>
+                <button  class="btn btn-primary" (click)="addFields('languages');">+</button>
+            </fieldset>
+            <fieldset  class="col-md-12" formArrayName="customBlocks">
+                <h2>Custom blocks</h2>
+
+                <div class="no-items" [ngClass]="{hidden:!noCusomBlocks}">
+                    No items in this part
+                </div>
+
+                <div class="customBlocks-form" *ngFor="let customBlocks of documentForm.controls.customBlocks.controls; let i = index">
+                    <button class="btn btn-danger" type="button" (click)="removeFields('customBlocks',i);">X</button>
+
+                    <br>
+                    <div class="col-md-12 custom-inputs-block">
+                        <md-input-container>
+                            <input mdInput type="text"  placeholder="Block name" [formControl]="customBlocks.controls['customBlockName']">
+                        </md-input-container>
+                        <br>
+                        <h4>Block text</h4>
+                         <quill-editor  mdInput  placeholder="Block text"  [formControl]="customBlocks.controls['customBlockText']"></quill-editor>
+
+                        <br>
+
+                    </div>
+                </div>
+                <button  class="btn btn-primary" (click)="addFields('customBlocks');">+</button>
+            </fieldset>
+
+            <div class="col-md-12">
+                <h2>Hobbies</h2>
+
+                <quill-editor formControlName="hobbies" placeholder="Hobbies" value=""></quill-editor>
+
+            </div>
+            <div class="col-md-12">
+                <h2>Why I</h2>
+
+                <quill-editor   formControlName="whyI" placeholder="Why I" value=""></quill-editor >
+
+            </div>
+            <div class="col-md-12 agrement-block">
+                <h2>Agreement to process my personal info</h2>
+
+                <quill-editor   formControlName="agreement" placeholder="Agreement" value=""></quill-editor>
+
+            </div>
+            <div class="col-md-12 template">
+                <h2>Choose CV template</h2>
+                    <input type="radio" id="template_1" checked [checked]="true"  formControlName="template" [value]="1">
+                        <label for="template_1"><img  src="assets/images/template_1.jpg" alt="" class="template-image" ></label>
+                    <input type="radio" id="template_2"   formControlName="template" [value]="2">
+                        <label for="template_2"><img  src="assets/images/template_2.jpg" alt="" class="template-image" ></label>
+                    <input type="radio" id="template_3"  formControlName="template" [value]="3">
+                       <label for="template_3"><img  src="assets/images/template_3.jpg" alt="" class="template-image" ></label>
+            </div>
+
+        </div>
+    </form>
+    <div>
+        <button class="btn btn-primary" (click)="saveForm($event)">SAVE FORM ON THE SERVER</button>
+        <button class="btn btn-primary pull-right" (click)="savePDF($event)">DOWNLAD PDF FOR FREE</button>
+        <div class="clear"></div>
+    </div>
+    <div #CvTpl style="width: 210mm; margin: auto; background-color:#fff;" >
+      <cv-tpl-1 *ngIf="showTemplateView && documentForm.value.template == 1 " [fieldsData]="documentForm.value" [profileImageSrc] = "profileImageSrc"></cv-tpl-1>
+     <cv-tpl-2  *ngIf="showTemplateView && documentForm.value.template == 2 " [fieldsData]="documentForm.value" [profileImageSrc] = "profileImageSrc"></cv-tpl-2>
+    </div>
+</div>

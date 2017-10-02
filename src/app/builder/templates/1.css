@@ -1,0 +1,13 @@
+
+.template-1 .aside{
+	background-color: #5f497a;
+	color:#fff;
+}
+.template-1 .content{
+	color:#333;
+}
+.template-1 .title{
+	font-size:52px;
+}
+.template-1 .aside .title{color:#fff}
+:host{position:absolute; top:-999px;}
