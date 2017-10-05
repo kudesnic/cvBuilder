@@ -9,8 +9,8 @@ import { UserHttpService }          from '../services/userHttp.service';
     providers: [UserHttpService, CvDataService],
 })
 export class ResumeComponent implements OnInit{
-  public myResumes:any[] ;
-  public allResumes:any[] ;
+  public myResumes:any[] = [] ;
+  public allResumes:any[] = [] ;
     public currentPage:number = 1;
     public totalCount:number = 25;
     public perPage:number=25;
@@ -20,13 +20,22 @@ export class ResumeComponent implements OnInit{
     }
 
     public getMyResumes(page:number = null, id:any = null){
-        this.UserHttpService.get('resumes/all-my-resumes', page, id).subscribe((data : any) => {this.myResumes=data;console.log(data) });
+        this.UserHttpService.get('resumes/all-my-resumes', page, id).subscribe((data : any) => {
+            for(var i=0; i< data.items.length; i++){
+                data.items[i].data =JSON.parse(data.items[i].data);
+                console.log('i', i);
+            }
+            this.myResumes=data;
+
+        });
     }
 
     public getAllResumes(page:number = null, id:any = null) {
-        console.log(page + ' page');
-        this.UserHttpService.get('resumes/all-resumes', page, id).subscribe((data : any) => {
-            console.log(data);
+        this.UserHttpService.get('resumes/all-resumes', id, page).subscribe((data : any) => {
+            for(var i=0; i< data.items.length; i++){
+                data.items[i].data =JSON.parse(data.items[i].data);
+                console.log('i', i);
+            }
             this.allResumes = data;
             this.totalCount = data._meta.totalCount;
             this.perPage = data._meta.perPage;
@@ -47,6 +56,15 @@ export class ResumeComponent implements OnInit{
 
     }
     public copyCVLink(){}
-    public deleteCv(){}
-    public editCV(){}
+    public deleteCv(id:number){
+
+        this.UserHttpService.delete('resumes/' + id).subscribe((data : any) => {
+            if(!data){
+                document.getElementById('cv-' + id).remove();
+            }
+        });
+    }
+    public viewCv(id:number){
+       let resume:any;
+    }
 }

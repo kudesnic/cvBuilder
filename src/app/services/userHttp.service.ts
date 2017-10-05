@@ -63,7 +63,7 @@ export class UserHttpService{
 
 
 
-    get(urlPath:string, page:any = null,  id:any = null){
+    get(urlPath:string,id:any = null, page:any = null,  ){
 
         var params = new URLSearchParams();
         if(id){
@@ -79,10 +79,11 @@ export class UserHttpService{
     }
 
 
-    delete(urlPath:string, id:string){
-
+    delete(urlPath:string, id:number = null){
+        if(id)
+           var searchParams = new URLSearchParams('id=' + id);
         var result = this.http.delete(this.baseUrl + urlPath, new RequestOptions({
-            search: new URLSearchParams('id=' + id),
+            search: searchParams,
             headers : this.generateHeaders()
         }))
             .map(res => res.json())

@@ -21,7 +21,7 @@ var ResumeComponent = (function () {
         var _this = this;
         if (page === void 0) { page = null; }
         if (id === void 0) { id = null; }
-        this.UserHttpService.get('resumes/all-my-resumes', page, id).subscribe(function (data) { _this.myResumes = data; console.log(data); });
+        this.UserHttpService.get('resumes/all-my-resumes', id).subscribe(function (data) { _this.myResumes = data; console.log(data); });
     };
     ResumeComponent.prototype.getAllResumes = function (page, id) {
         var _this = this;

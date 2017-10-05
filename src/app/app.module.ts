@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import {Routes, RouterModule} from '@angular/router';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent }  from './app.component';
+import { LinkDirective }  from './link.directive';
 import { HomeComponent } from './home/home.component';
 import { BuilderComponent } from './builder/builder.component';
 import { ResumeComponent } from './resume/resume.component';
@@ -21,7 +22,8 @@ import { LoginModalService }          from './services/loginModal.service';
 const appRoutes: Routes =[
   { path: '', component: HomeComponent},
   { path: 'builder', component: BuilderComponent},
-  { path: 'resume', component: ResumeComponent}
+  { path: 'resume/:id', component: BuilderComponent},
+  { path: 'resumes', component: ResumeComponent}
 ];
 
 @NgModule({
@@ -40,7 +42,8 @@ const appRoutes: Routes =[
     HttpModule,
 
   ],
-  declarations: [ AppComponent, HomeComponent, BuilderComponent, ResumeComponent, Template1Component, Template2Component, MainTemplateComponent, CvProfileImgComponent ],
+  declarations: [ AppComponent, HomeComponent, BuilderComponent, ResumeComponent, Template1Component, Template2Component,
+    MainTemplateComponent, CvProfileImgComponent, LinkDirective ],
     entryComponents: [],
   bootstrap:    [ AppComponent ],
   providers:[UserHttpService, LoginModalService]

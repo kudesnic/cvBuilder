@@ -1,4 +1,6 @@
 import {Component, OnInit, ViewChild, Input} from '@angular/core';
+import { ActivatedRoute} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
 import { Validators, FormGroup, FormArray, FormControl } from '@angular/forms';
 import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CvDataService }          from './../services/cv-data.service';
@@ -14,7 +16,8 @@ import * as jsPDF from '../../../node_modules/jspdf-fixed/dist/jspdf.min.js'
 })
 export class BuilderComponent implements OnInit  {
 
-
+    private resumeId:number;
+    private subscription: Subscription;
      noCustomBlocks:boolean = true;
      noWorks:boolean = true;
      noStudies:boolean = true;
@@ -39,31 +42,58 @@ export class BuilderComponent implements OnInit  {
 
 
 public fieldsData: any;
-    public documentForm:FormGroup = new FormGroup({
-        name: new FormControl(''),
-        secName: new FormControl(''),
-        surName: new FormControl(''),
-        positions: new FormControl(''),
-        image: new FormControl(''),
-        email:new FormControl(''),
-        facebook:new FormControl(''),
-        twitter:new FormControl(''),
-        phone:new FormControl(''),
-        phone2:new FormControl(''),
-        skype:new FormControl(''),
-        address:new FormControl(''),
-        whoIAm:new FormControl(''),
-        works:new FormArray([]),
-        studies:new FormArray([]),
-        lastWorks: new FormArray([]),
-        languages: new FormArray([]),
-        hobbies: new FormControl(''),
-        whyI:new FormControl('') ,
-        customBlocks:new FormArray([]),
-        agreement:new FormControl(''),
-        template:new FormControl('')
- });
-    constructor(private CvDataService: CvDataService, private UserHttpService:UserHttpService, public LoginModalService:LoginModalService ){}
+    public documentForm:FormGroup ;
+    constructor(private CvDataService: CvDataService, private UserHttpService:UserHttpService,
+                public LoginModalService:LoginModalService,private activateRoute: ActivatedRoute )
+    {
+        this.documentForm =  new FormGroup({
+            name: new FormControl(''),
+            secName: new FormControl(''),
+            surName: new FormControl(''),
+            positions: new FormControl(''),
+            image: new FormControl(''),
+            email:new FormControl(''),
+            facebook:new FormControl(''),
+            twitter:new FormControl(''),
+            phone:new FormControl(''),
+            phone2:new FormControl(''),
+            skype:new FormControl(''),
+            address:new FormControl(''),
+            whoIAm:new FormControl(''),
+            works:new FormArray([]),
+            studies:new FormArray([]),
+            lastWorks: new FormArray([]),
+            languages: new FormArray([]),
+            hobbies: new FormControl(''),
+            whyI:new FormControl('') ,
+            customBlocks:new FormArray([]),
+            agreement:new FormControl(''),
+            template:new FormControl('')
+        });
+        this.subscription = activateRoute.paramMap.subscribe(ParamsAsMap =>{this.resumeId = parseInt(ParamsAsMap.get('id')); console.log(parseInt(ParamsAsMap.get('id')) )});
+        this.UserHttpService.get('resumes/' +  this.resumeId ).subscribe((data : any) => {
+            console.log(data);
+            console.log(this.documentForm);
+            console.log( 'img',           this.documentForm.value.image);
+            var obj =JSON.parse(data.data);
+            console.log(obj.works);
+            if(obj.works.length){
+                console.log('llllength');
+                for(let i=0; i<obj.works.length; i++)
+                    this.addFields('works');
+            }
+            obj.image = '';
+            obj.positions = data.positions;
+            this.documentForm.setValue(obj);
+            console.log( 'img',           this.documentForm.value.image);
+
+
+            this.fieldsData = this.documentForm.value;
+
+
+        });
+
+    }
     public addFields(fieldsBlockName:string): void {
         var fields;
         switch(fieldsBlockName){
@@ -156,7 +186,7 @@ public fieldsData: any;
             this.profileImage.nativeElement.src=this.profileImageSrc;
         }
 }
-public saveForm(event:any){
+    public saveForm(event:any){
     if(!this.UserHttpService.isAuthorized()){
         this.LoginModalService.setNeedLogin(true);
         this.LoginModalService.openLoginModal();
@@ -204,7 +234,7 @@ console.log(typeof  this.photoFile);
     }
 
 }
-public savePDF(event:any){
+    public savePDF(event:any){
     var doc = new jsPDF('p', 'px','a4');
     // We'll make our own renderer to skip this editor
     doc.internal.scaleFactor = 14.24;
@@ -238,6 +268,9 @@ public savePDF(event:any){
 
     ngOnInit() {
        // this.addFields('works'); this.addFields('studies'); this.addFields('lastWorks');this.addFields('customBlocks');
+    }
+    ngOnDestroy(){
+        this.subscription.unsubscribe();
     }
 
 }
