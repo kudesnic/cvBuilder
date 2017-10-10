@@ -62,9 +62,12 @@
 	padding:10px 0;
 }
 .infoBlock>div{
-	padding-left:20px;
+	padding-left:10px;
 }
 .content .company-name, .content .university-name{
 	font-size: 22px;
 	text-transform: capitalize;
+}
+.company-info, .duties{
+	padding-left:10px;
 }

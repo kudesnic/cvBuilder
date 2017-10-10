@@ -86,6 +86,7 @@ export class AppComponent  implements OnInit    {
 
         });
     }
+
   public comparePasswords(){
       console.log('compare');
       if(this.registerForm.value['passwordField']!=this.registerForm.value['passwordRepeatField'])

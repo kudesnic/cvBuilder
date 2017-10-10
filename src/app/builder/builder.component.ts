@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, Input} from '@angular/core';
+import {Component, OnInit, ViewChild, Input, AfterContentChecked} from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import { Validators, FormGroup, FormArray, FormControl } from '@angular/forms';
@@ -8,13 +8,16 @@ import { UserHttpService }          from './../services/userHttp.service';
 import { LoginModalService }          from './../services/loginModal.service';
 import * as html2canvas from '../../../node_modules/html2canvas/dist/html2canvas.js'
 import * as jsPDF from '../../../node_modules/jspdf-fixed/dist/jspdf.min.js'
+import {ImageCropperComponent, CropperSettings, Bounds} from 'ng2-img-cropper';
+
+
 
 @Component({
   selector: 'builder',
   templateUrl: './builderHtml.html',
     providers:[CvDataService],
 })
-export class BuilderComponent implements OnInit  {
+export class BuilderComponent implements OnInit, AfterContentChecked  {
 
     private resumeId:number;
     private subscription: Subscription;
@@ -23,9 +26,15 @@ export class BuilderComponent implements OnInit  {
      noStudies:boolean = true;
      noLanguages:boolean = true;
     showTemplateView:boolean = false;
+    showBuilder:boolean = false;
+    showCropper:boolean = false;
     public profileImageSrc:any;
     public photoFile:File;
-
+    public couldEdit:boolean = false;
+    cropperSettings:CropperSettings;
+    croppedWidth:number;
+    croppedHeight:number;
+    newImg:any;
     @ViewChild("registerModal ") registerModal:any;
     @ViewChild("workss")
         workss: any;
@@ -35,7 +44,7 @@ export class BuilderComponent implements OnInit  {
 
     @ViewChild("profileImage")
     profileImage: any;
-
+    @ViewChild('cropper', undefined) cropper:ImageCropperComponent;
 
 
 
@@ -70,28 +79,84 @@ public fieldsData: any;
             agreement:new FormControl(''),
             template:new FormControl('')
         });
-        this.subscription = activateRoute.paramMap.subscribe(ParamsAsMap =>{this.resumeId = parseInt(ParamsAsMap.get('id')); console.log(parseInt(ParamsAsMap.get('id')) )});
-        this.UserHttpService.get('resumes/' +  this.resumeId ).subscribe((data : any) => {
-            console.log(data);
-            console.log(this.documentForm);
-            console.log( 'img',           this.documentForm.value.image);
-            var obj =JSON.parse(data.data);
-            console.log(obj.works);
-            if(obj.works.length){
-                console.log('llllength');
-                for(let i=0; i<obj.works.length; i++)
-                    this.addFields('works');
-            }
-            obj.image = '';
-            obj.positions = data.positions;
-            this.documentForm.setValue(obj);
-            console.log( 'img',           this.documentForm.value.image);
 
+        this.cropperSettings = new CropperSettings();
+        this.cropperSettings.width = 200;
+        this.cropperSettings.height = 200;
 
-            this.fieldsData = this.documentForm.value;
+        this.cropperSettings.croppedWidth = 200;
+        this.cropperSettings.croppedHeight = 200;
 
+        /*  this.cropperSettings.canvasWidth = 500;
+            this.cropperSettings.canvasHeight = 300;
+        */
+        this.cropperSettings.minWidth = 10;
+        this.cropperSettings.minHeight = 10;
 
+        this.cropperSettings.rounded = false;
+        this.cropperSettings.keepAspect = false;
+        this.cropperSettings.noFileInput = true;
+
+        this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+        this.cropperSettings.cropperDrawSettings.strokeWidth = 2;
+        this.newImg = {};
+
+        this.subscription = activateRoute.paramMap.subscribe(ParamsAsMap =>{
+            this.resumeId = parseInt(ParamsAsMap.get('id'));
         });
+        if(this.resumeId){
+
+            this.UserHttpService.get('resumes/' +  this.resumeId ).subscribe((data : any) => {
+                console.log(data);
+
+                var obj =JSON.parse(data.data);
+                obj.image = data.img;
+                this.profileImageSrc = this.UserHttpService.rootUrl + data.img;
+
+                for(let param in obj){
+                    if(typeof  obj[param] != 'string')
+                        for(var i=0; i<obj[param].length; i++)
+                            this.addFields(param);
+                }
+                this.documentForm.setValue(obj);
+                if(this.documentForm.value.works.length)
+                    for(var i = 0; i<this.documentForm.value.works.length; i++){
+                        console.log(this.documentForm.value.works[i].companyDateStart);
+                        this.documentForm.value.works[i].companyDateStart = new Date(this.documentForm.value.works[i].companyDateStart);
+                        this.documentForm.value.works[i].companyDateEnd = new Date(this.documentForm.value.works[i].companyDateEnd);
+                    }
+                if(this.documentForm.value.studies.length)
+                    for(var i = 0; i<this.documentForm.value.studies.length; i++){
+                        console.log(this.documentForm.value.studies[i].companyDateStart);
+                        this.documentForm.value.studies[i].universityDateStart = new Date(this.documentForm.value.studies[i].universityDateStart);
+                        this.documentForm.value.studies[i].universityDateEnd = new Date(this.documentForm.value.studies[i].universityDateEnd);
+                    }
+                this.fieldsData = this.documentForm.value;
+                this.showTemplateView = true;
+                if(this.UserHttpService.isAuthorized() && this.UserHttpService.getUserId() == data.user_id )
+                {
+
+                    this.couldEdit = true;
+                    console.log('I can  edit', this.documentForm);
+                }
+            });
+
+        }
+        else {
+            this.showBuilder = true;
+            this.couldEdit = true;
+            this.documentForm.value.template = 1;
+        }
+
+    }
+    cropped(bounds:Bounds) {
+        this.croppedHeight =bounds.bottom-bounds.top;
+        this.croppedWidth = bounds.right-bounds.left;
+        this.profileImageSrc = this.newImg.image;
+        this.photoFile = this.dataURLtoFile(this.profileImageSrc , Math.random().toString(36).substring(2, 13)
+            + this.documentForm.value.name + this.documentForm.value.surName + '.jpg' );
+        console.log(this.photoFile, 'file22222222');
+
 
     }
     public addFields(fieldsBlockName:string): void {
@@ -179,33 +244,48 @@ public fieldsData: any;
     public imageChoosed(event:any){
         let reader  = new FileReader();
         this.photoFile = event.target.files[0];
+        console.log(this.photoFile, 'file11111');
         reader.readAsDataURL(event.target.files[0]);
         reader.onloadend = (e) => {
-            console.log('event');
+            this.showCropper = true;
+            var image = new Image();
+            image.src = reader.result;
+            this.cropper.setImage(image);
             this.profileImageSrc = reader.result;
             this.profileImage.nativeElement.src=this.profileImageSrc;
         }
-}
+
+    }
+    private dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, {type:'image/jpeg'});
+    }
     public saveForm(event:any){
     if(!this.UserHttpService.isAuthorized()){
         this.LoginModalService.setNeedLogin(true);
         this.LoginModalService.openLoginModal();
        this.UserHttpService.isAuthorizedObservable().subscribe((data) => {
-
            if(!this.documentForm.value.template)
                this.documentForm.value.template = 1;
+
            this.fieldsData = this.documentForm.value;
-
            let formData = new FormData();
-           if(this.photoFile.size > 10485760)
-               throw 'The pho is to large!!!';
-           formData.append('img', this.photoFile);
-           formData.append('data', this.fieldsData);
+           if(this.photoFile) {
+               if (this.photoFile.size > 10485760)
+                   throw 'The pho is to large!!!';
+               formData.append('img', this.photoFile);
+           }
+           formData.append('data', JSON.stringify(this.fieldsData));
            formData.append('position', this.fieldsData.positions);
-
-        this.showTemplateView = true;
-        this.UserHttpService.post('resumes',formData, true).subscribe((data : any) => {console.log(data)});
-        //this.CvDataService.addData(this.fieldsData, '', 'MyOriginalCv');
+           //console.log(formData);
+           console.log('fields data ', this.fieldsData);
+           //  this.fieldsData = this.documentForm.value;
+           //  this.showTemplateView = true;
+           this.UserHttpService.post('resumes',formData, true).subscribe((data : any) => {console.log(data)});
 
     });
     }
@@ -213,10 +293,8 @@ public fieldsData: any;
         if(!this.documentForm.value.template)
             this.documentForm.value.template = 1;
         this.fieldsData = this.documentForm.value;
-console.log(typeof  this.photoFile);
         let formData = new FormData();
         if(this.photoFile) {
-            console.log(this.photoFile);
             if (this.photoFile.size > 10485760)
                 throw 'The pho is to large!!!';
             formData.append('img', this.photoFile);
@@ -266,8 +344,12 @@ console.log(typeof  this.photoFile);
     });
 }
 
-    ngOnInit() {
-       // this.addFields('works'); this.addFields('studies'); this.addFields('lastWorks');this.addFields('customBlocks');
+    ngAfterContentChecked() {
+
+    }
+    ngOnInit(){
+
+
     }
     ngOnDestroy(){
         this.subscription.unsubscribe();

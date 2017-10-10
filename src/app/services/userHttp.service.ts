@@ -11,19 +11,24 @@ import 'rxjs/add/observable/throw';
 export class UserHttpService{
 
     public baseUrl = 'http://cvbuilder.web-andryshka.ru/api/web/';
+    public rootUrl = 'http://cvbuilder.web-andryshka.ru';
     public isAuthorizedObsSubject:BehaviorSubject<boolean> ;
     constructor(private http: Http){
-        if(!sessionStorage.getItem('token'))
-            this.isAuthorizedObsSubject = new BehaviorSubject(false);
+            this.isAuthorizedObsSubject = new BehaviorSubject(sessionStorage.getItem('token')?true:false)
+
     }
 
     setUser(userData:any){
         this.isAuthorizedObsSubject.next(true);
         sessionStorage.setItem('token', userData.token);
+        sessionStorage.setItem('userId', userData.userId);
         sessionStorage.setItem('username', userData.username);
     }
     getUsername(){
        return sessionStorage.getItem('username') ;
+    }
+    getUserId(){
+        return sessionStorage.getItem('userId') ;
     }
 
     getToken(){

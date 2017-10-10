@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { CvDataService }          from '../services/cv-data.service';
 import { UserHttpService }          from '../services/userHttp.service';
 
@@ -15,7 +15,8 @@ export class ResumeComponent implements OnInit{
     public totalCount:number = 25;
     public perPage:number=25;
     @ViewChild('pagination-block') paginationBlock:any;
-    constructor(private UserHttpService: UserHttpService, private CvDataService : CvDataService, private route: ActivatedRoute){
+    constructor(private UserHttpService: UserHttpService, private CvDataService : CvDataService, private activeRoute: ActivatedRoute,
+                private router:Router){
         this.getAllResumes();
     }
 
@@ -41,7 +42,7 @@ export class ResumeComponent implements OnInit{
             this.perPage = data._meta.perPage;
         });
         if(page == null)
-            this.route.queryParams.subscribe(
+            this.activeRoute.queryParams.subscribe(
                 (queryParam: any) => {
                     if(queryParam['page'])
                     this.currentPage = queryParam['page'];
@@ -65,6 +66,6 @@ export class ResumeComponent implements OnInit{
         });
     }
     public viewCv(id:number){
-       let resume:any;
+        this.router.navigate(['resume', id], { skipLocationChange: false})
     }
 }
