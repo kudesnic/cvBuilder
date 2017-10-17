@@ -17,6 +17,10 @@ export class ResumeComponent implements OnInit{
     @ViewChild('pagination-block') paginationBlock:any;
     constructor(private UserHttpService: UserHttpService, private CvDataService : CvDataService, private activeRoute: ActivatedRoute,
                 private router:Router){
+
+        if(this.UserHttpService.isAuthorized())
+            this.getMyResumes();
+
         this.getAllResumes();
     }
 
@@ -53,7 +57,6 @@ export class ResumeComponent implements OnInit{
     }
 
     public ngOnInit(){
-        this.getMyResumes();
 
     }
     public copyCVLink(){}

@@ -1,10 +1,10 @@
 <div class="container builder">
-    <div class="col-md-12 text-right" *ngIf="resumeId">
+    <div class="col-md-12 text-right" *ngIf="couldEdit && resumeId">
             <md-checkbox id="showBuilder"   [(ngModel)]="showBuilder" [checked] = "showBuilder">
                 Show builder and edit my CV
             </md-checkbox>
     </div>
-    <div class="" *ngIf="couldEdit && showBuilder">
+    <div class="{{(couldEdit && showBuilder)?'':'hidden'}}" >
         <form [formGroup]="documentForm" id="builder-form">
             <div class="row">
             <div class="col-md-4">
@@ -125,15 +125,27 @@
                             <quill-editor  mdInput  placeholder="Duties"  [formControl]="works.controls['workDuties']"></quill-editor>
 
                             <br>
-                            <md-input-container>
-                                <input mdInput placeholder="Start work date"  [formControl]="works.controls['companyDateStart']" [mdDatepicker]="pickerStart" >
-                                <button mdSuffix [mdDatepickerToggle]="pickerStart"></button>
+                            <md-input-container >
+                                <span  style="width: 150px; display: block; " >
+                                     <span *ngIf="!works.controls['companyDateStart'].value.getMonth">Start work date</span>
+                                     <span *ngIf="works.controls['companyDateStart'].value.getMonth">
+                                         {{works.controls['companyDateStart'].value.getDate()}}.{{works.controls['companyDateStart'].value.getMonth()}}.{{works.controls['companyDateStart'].value.getFullYear()}} </span>
+                                 </span>
+                                    <input mdInput  class="hidden" placeholder="Start work date"  [formControl]="works.controls['companyDateStart']"  [mdDatepicker]="pickerStart" >
+                                <button mdSuffix [mdDatepickerToggle]="pickerStart" ></button>
                             </md-input-container>
 
 
                             <md-datepicker #pickerStart startView="year" ></md-datepicker>
                             <md-input-container>
-                                <input mdInput  placeholder="End work date"  [formControl]="works.controls['companyDateEnd']" [mdDatepicker]="pickerEnd" >
+                                <span  style="width: 150px; display: block; " >
+                                     <span *ngIf="!works.controls['companyDateEnd'].value.getMonth">End work date</span>
+
+                                    <span *ngIf="works.controls['companyDateEnd'].value.getMonth">
+                                        {{works.controls['companyDateEnd'].value.getDate()}}.{{works.controls['companyDateEnd'].value.getMonth()}}.{{works.controls['companyDateEnd'].value.getFullYear()}} </span>
+                                </span>
+
+                                <input mdInput class="hidden"   placeholder="End work date"  [formControl]="works.controls['companyDateEnd']" [mdDatepicker]="pickerEnd" >
                                 <button mdSuffix [mdDatepickerToggle]="pickerEnd"></button>
                             </md-input-container>
                             <md-datepicker #pickerEnd startView="year" ></md-datepicker>
@@ -165,13 +177,25 @@
                             </md-input-container>
 
                             <md-input-container>
-                                <input mdInput placeholder="Start studying date"  [formControl]="studies.controls['universityDateStart']" [mdDatepicker]="pickerStart" >
+                                <span  style="width: 150px; display: block; " >
+                                     <span *ngIf="!studies.controls['universityDateStart'].value.getMonth">Start studying date</span>
+
+                                    <span *ngIf="studies.controls['universityDateStart'].value.getMonth">
+                                        {{studies.controls['universityDateStart'].value.getDate()}}.{{studies.controls['universityDateStart'].value.getMonth()}}.{{studies.controls['universityDateStart'].value.getFullYear()}} </span>
+                                </span>
+                                <input mdInput  class="hidden" placeholder="Start studying date"  [formControl]="studies.controls['universityDateStart']" [mdDatepicker]="pickerStart" >
                                 <button mdSuffix [mdDatepickerToggle]="pickerStart"></button>
                             </md-input-container>
                             <md-datepicker #pickerStart startView="year" ></md-datepicker>
 
                             <md-input-container>
-                                <input mdInput  placeholder="End studying date"  [formControl]="studies.controls['universityDateEnd']" [mdDatepicker]="pickerEnd" >
+                                 <span  style="width: 150px; display: block; " >
+                                     <span *ngIf="!studies.controls['universityDateEnd'].value.getMonth">End studying date</span>
+
+                                    <span *ngIf="studies.controls['universityDateEnd'].value.getMonth">
+                                        {{studies.controls['universityDateEnd'].value.getDate()}}.{{studies.controls['universityDateEnd'].value.getMonth()}}.{{studies.controls['universityDateEnd'].value.getFullYear()}} </span>
+                                </span>
+                                <input mdInput class="hidden"  placeholder="End studying date"  [formControl]="studies.controls['universityDateEnd']" [mdDatepicker]="pickerEnd" >
                                 <button mdSuffix [mdDatepickerToggle]="pickerEnd"></button>
                             </md-input-container>
 

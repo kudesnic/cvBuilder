@@ -26,9 +26,7 @@
         </div>
         <div class="text-center">
             <button type="button" class="btn btn-success login-btn"  [disabled]="!loginForm.valid" (click)="login()">Login</button>
-            <p>Or</p>
-        </div>
-        <div class="text-center">
+            <span style = "padding: 30px; font-weight: 600;">Or</span>
             <button type="button" class="btn btn-success"  *ngIf="!isUserLogged" (click)="LoginModalService.openRegisterModal();">Register</button>
         </div>
     </ng-template>
@@ -69,6 +67,24 @@
         </div>
         <button type="button" class="btn btn-success register-btn" [disabled]="!registerForm.valid" (click)="register()">Register</button>
     </ng-template>
+    <ng-template #infoModal let-c="close" let-d="dismiss" >
+        <div id="infoModal">
+            <div class="modal-header">
+                <h4 class="modal-title">{{this.LoginModalService.infoModalText}}</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+             </div>
+            <div class="modal-body text-center">
+
+                <span class="fa fa-exclamation-triangle fa-5 error" aria-hidden="true" *ngIf="!this.LoginModalService.infoModalNoErrors"></span>
+                <span class="fa fa-check-circle fa-5 success" aria-hidden="true" *ngIf="this.LoginModalService.infoModalNoErrors"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="c('Close click')">Close</button>
+            </div>
+        </div>
+    </ng-template>
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -85,12 +101,20 @@
                 <li class="nav-item" routerLinkActive="active"  [routerLinkActiveOptions]="{exact:true}">
                     <a class="nav-link" routerLink="/resumes">Resume</a>
                 </li>
+
+            </ul>
+            <ul class="navbar-nav " style = "    width: 100%;justify-content: flex-end;">
+                <li class="nav-item"  *ngIf="!isUserLogged" >
+                    <a class="loginModal-btn nav-link "  (click)="LoginModalService.openLoginModal()">Login</a>
+                </li>
+                <li class="nav-item" *ngIf="!isUserLogged">
+                    <a class="registerModal-btn nav-link"  (click)="LoginModalService.openRegisterModal()">Register</a>
+                </li>
+                <li class="nav-item" *ngIf="isUserLogged">
+                    <a  class=" username-block  nav-link"  >{{UserHttpService.getUsername()}} <a (click)="logout()">Logout</a></a>
+                </li>
             </ul>
         </div>
-
-        <a *ngIf="!isUserLogged" class="loginModal-btn "  (click)="LoginModalService.openLoginModal()">Login</a>
-        <a *ngIf="!isUserLogged" class="registerModal-btn "  (click)="LoginModalService.openRegisterModal()">Register</a>
-        <a *ngIf="isUserLogged" class=" username-block"  >{{UserHttpService.getUsername()}} <a (click)="logout()">Logout</a></a>
 
         <div class="dropdown show" *ngIf="user">
             <span class="  dropdown-toggle"  id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

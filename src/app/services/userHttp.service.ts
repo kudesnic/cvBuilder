@@ -84,35 +84,20 @@ export class UserHttpService{
     }
 
 
-    delete(urlPath:string, id:number = null){
+    delete(urlPath:string, id:number = null, useAuthorization:boolean = true, headers:any = null){
         if(id)
            var searchParams = new URLSearchParams('id=' + id);
         var result = this.http.delete(this.baseUrl + urlPath, new RequestOptions({
             search: searchParams,
-            headers : this.generateHeaders()
+            headers : this.generateHeaders(useAuthorization, headers)
         }))
             .map(res => res.json())
             .catch((error:any) =>{  return Observable.throw(error);});
         return result;
     }
-    put(urlPath:string, id:string, data:any){
+    patch(urlPath:string, data:any, useAuthorization:boolean = true, headers:any = null){
 
-        var params = new URLSearchParams();
-        for (var key in data) {
-            console.log(key);
-            params.set(key, data[key]);
-        }
-        var result = this.http.put(this.baseUrl + urlPath,params.toString(), new RequestOptions({
-            search: new URLSearchParams('id=' + id),
-            headers : this.generateHeaders()
-        }))
-            .map(res => res.json())
-            .catch((error:any) =>{  return Observable.throw(error);});
-        return result;
-    }
-    post(urlPath:string, data:any, useAuthorization:boolean = true, headers:any = null){
-
-let parameters;
+        let parameters;
         if(data.constructor.name != 'FormData'){
 
             var params = new URLSearchParams();
@@ -127,6 +112,58 @@ let parameters;
         }
         else
             parameters = data;
+
+        var result = this.http.patch(this.baseUrl + urlPath, parameters, new RequestOptions({
+            headers : this.generateHeaders(useAuthorization, headers)
+        }))
+            .map(res => res.json())
+            .catch((error:any) =>{  return Observable.throw(error);});
+        return result;
+
+    }
+    put(urlPath:string, data:any, useAuthorization:boolean = true, headers:any = null){
+
+        let parameters;
+        if(data.constructor.name != 'FormData'){
+
+            var params = new URLSearchParams();
+            for (var index in data) {
+                if (!data.hasOwnProperty(index)) {
+                    continue;
+                }
+                params.set(index, data[index]);
+
+            }
+            parameters = params.toString();
+        }
+        else
+            parameters = data;
+
+        var result = this.http.put(this.baseUrl + urlPath, parameters, new RequestOptions({
+            headers : this.generateHeaders(useAuthorization, headers)
+        }))
+            .map(res => res.json())
+            .catch((error:any) =>{  return Observable.throw(error);});
+        return result;
+
+    }
+    post(urlPath:string, data:any, useAuthorization:boolean = true, headers:any = null){
+
+        let parameters;
+            if(data.constructor.name != 'FormData'){
+
+                var params = new URLSearchParams();
+                for (var index in data) {
+                    if (!data.hasOwnProperty(index)) {
+                        continue;
+                    }
+                    params.set(index, data[index]);
+
+                }
+                parameters = params.toString();
+            }
+            else
+                parameters = data;
 
        // console.log(params);
         var result = this.http.post(this.baseUrl + urlPath, parameters, new RequestOptions({

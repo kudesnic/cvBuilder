@@ -120,16 +120,23 @@ public fieldsData: any;
                 }
                 this.documentForm.setValue(obj);
                 if(this.documentForm.value.works.length)
-                    for(var i = 0; i<this.documentForm.value.works.length; i++){
-                        console.log(this.documentForm.value.works[i].companyDateStart);
-                        this.documentForm.value.works[i].companyDateStart = new Date(this.documentForm.value.works[i].companyDateStart);
-                        this.documentForm.value.works[i].companyDateEnd = new Date(this.documentForm.value.works[i].companyDateEnd);
+                    console.log(this.documentForm);
+
+                for(var i = 0; i<this.documentForm.value.works.length; i++){
+                        this.documentForm.controls['works']['controls'][i]['controls']['companyDateStart'].patchValue(
+                            new Date(this.documentForm.value.works[i].companyDateStart),{'onlySelf':true});
+                        this.documentForm.controls['works']['controls'][i]['controls']['companyDateEnd'].patchValue(
+                            new Date(this.documentForm.value.works[i].companyDateEnd),{'onlySelf':true});
+
+
                     }
                 if(this.documentForm.value.studies.length)
                     for(var i = 0; i<this.documentForm.value.studies.length; i++){
-                        console.log(this.documentForm.value.studies[i].companyDateStart);
-                        this.documentForm.value.studies[i].universityDateStart = new Date(this.documentForm.value.studies[i].universityDateStart);
-                        this.documentForm.value.studies[i].universityDateEnd = new Date(this.documentForm.value.studies[i].universityDateEnd);
+
+                        this.documentForm.controls['studies']['controls'][i]['controls']['universityDateStart'].patchValue(
+                            new Date(this.documentForm.value.studies[i].universityDateStart),{'onlySelf':true});
+                        this.documentForm.controls['studies']['controls'][i]['controls']['universityDateEnd'].patchValue(
+                            new Date(this.documentForm.value.studies[i].universityDateEnd),{'onlySelf':true});
                     }
                 this.fieldsData = this.documentForm.value;
                 this.showTemplateView = true;
@@ -269,27 +276,36 @@ public fieldsData: any;
         this.LoginModalService.setNeedLogin(true);
         this.LoginModalService.openLoginModal();
        this.UserHttpService.isAuthorizedObservable().subscribe((data) => {
-           if(!this.documentForm.value.template)
-               this.documentForm.value.template = 1;
-
-           this.fieldsData = this.documentForm.value;
-           let formData = new FormData();
-           if(this.photoFile) {
-               if (this.photoFile.size > 10485760)
-                   throw 'The pho is to large!!!';
-               formData.append('img', this.photoFile);
-           }
-           formData.append('data', JSON.stringify(this.fieldsData));
-           formData.append('position', this.fieldsData.positions);
-           //console.log(formData);
-           console.log('fields data ', this.fieldsData);
-           //  this.fieldsData = this.documentForm.value;
-           //  this.showTemplateView = true;
-           this.UserHttpService.post('resumes',formData, true).subscribe((data : any) => {console.log(data)});
-
+           if(this.resumeId)
+               this.UserHttpService.post('resumes/update/' + this.resumeId ,this.getFormDataRequest() , true).subscribe((data : any) => {
+                 if(data)
+                     this.LoginModalService.openInfoModal('Saved!');
+               });
+           else
+                this.UserHttpService.post('resumes',this.getFormDataRequest() , true).subscribe((data : any) => {
+                    if(data)
+                        this.LoginModalService.openInfoModal('Saved!');
+                });
     });
     }
     else {
+        if(this.resumeId)
+            this.UserHttpService.post('resumes/update/' + this.resumeId ,this.getFormDataRequest() , true).subscribe((data : any) => {
+                if(data)
+                    this.LoginModalService.openInfoModal('Saved!');
+                console.log(data, '  data');
+            });
+        else
+            this.UserHttpService.post('resumes',this.getFormDataRequest() , true).subscribe((data : any) => {
+                if(data)
+                    this.LoginModalService.openInfoModal('Saved!');
+            });
+
+    }
+
+}
+    private getFormDataRequest(){
+
         if(!this.documentForm.value.template)
             this.documentForm.value.template = 1;
         this.fieldsData = this.documentForm.value;
@@ -301,17 +317,8 @@ public fieldsData: any;
         }
         formData.append('data', JSON.stringify(this.fieldsData));
         formData.append('position', this.fieldsData.positions);
-        //console.log(formData);
-        console.log('fields data ', this.fieldsData);
-       // console.log('img ', formData.get('img'));
-
-      //  this.fieldsData = this.documentForm.value;
-      //  this.showTemplateView = true;
-        this.UserHttpService.post('resumes',formData, true).subscribe((data : any) => {console.log(data)});
-
+        return formData;
     }
-
-}
     public savePDF(event:any){
     var doc = new jsPDF('p', 'px','a4');
     // We'll make our own renderer to skip this editor

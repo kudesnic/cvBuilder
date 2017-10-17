@@ -20,6 +20,7 @@ export class AppComponent  implements OnInit    {
     public isUserLogged:boolean = false;
     @ViewChild('registerModal') public registerModal:any;
     @ViewChild('loginModal') public loginModal:any;
+    @ViewChild('infoModal') public infoModal:any;
     public loginForm:FormGroup = new FormGroup({
     loginField : new FormControl(),
   passwordField : new FormControl()
@@ -38,6 +39,7 @@ export class AppComponent  implements OnInit    {
     public ngOnInit(){
         this.LoginModalService.setLoginModal(this.loginModal);
         this.LoginModalService.setRegisterModal(this.registerModal);
+        this.LoginModalService.setInfoModal(this.infoModal);
         if(this.UserHttpService.isAuthorized()){
             this.isUserLogged = true;
         }

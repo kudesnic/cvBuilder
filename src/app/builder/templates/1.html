@@ -58,7 +58,9 @@
 				<div *ngFor="let work of fieldsData.works; let i = index">
 					<div>
 						<h3 class="company-name d-inline">{{work.companyName}}</h3>
-						<div class="date d-inline  pull-right"  *ngIf="work.companyDateStart && work.companyDateEnd">{{work.companyDateStart.getDate()}}.{{work.companyDateStart.getMonth()}}.{{work.companyDateStart.getFullYear()}} - {{work.companyDateEnd.getDate()}}.{{work.companyDateEnd.getMonth()}}.{{work.companyDateEnd.getFullYear()}}</div>
+						{{work.companyDateStart}}
+						<div class="date d-inline  pull-right"
+							 *ngIf=" work.companyDateStart.getMonth && work.companyDateEnd.getMonth">{{work.companyDateStart.getDate()}}.{{work.companyDateStart.getMonth()}}.{{work.companyDateStart.getFullYear()}} - {{work.companyDateEnd.getDate()}}.{{work.companyDateEnd.getMonth()}}.{{work.companyDateEnd.getFullYear()}}</div>
 						<div class="clear"></div>
 					</div>
 						<div class="company-info" >

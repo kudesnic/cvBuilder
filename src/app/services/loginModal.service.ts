@@ -6,6 +6,9 @@ export class LoginModalService{
     constructor( public modalService: NgbModal){}
     private registerModal:any;
     private loginModal:any;
+    private infoModal:any;
+    private infoModalText:string;
+    private infoModalNoErrors:boolean = true;
     private currentModalRef:any;
     public needLoggin:boolean = false;
     getRegisterModal(){
@@ -20,10 +23,21 @@ export class LoginModalService{
     setLoginModal(data:any){
         this.loginModal  = data;
     }
+    setInfoModal(data:any){
+        this.infoModal  = data;
+    }
     openLoginModal(){
         this.closeModal();
 
         this.currentModalRef = this.modalService.open(this.loginModal);
+    }
+
+    openInfoModal(infoModalText:string, infoModalNoErrors:boolean = null){
+        this.closeModal();
+        if(infoModalNoErrors)
+            this.infoModalNoErrors = infoModalNoErrors;
+        this.infoModalText = infoModalText;
+        this.currentModalRef = this.modalService.open(this.infoModal);
     }
     openRegisterModal(){
 
@@ -38,6 +52,7 @@ export class LoginModalService{
     }
     closeModal(){
         if(this.currentModalRef){
+            this.infoModalNoErrors = true;
             this.currentModalRef.close();
             this.setNeedLogin(false);
         }

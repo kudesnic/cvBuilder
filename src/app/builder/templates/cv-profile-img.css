@@ -1,5 +1,6 @@
 
  .profile-img button{
+	 display: none;
 	position:absolute;
 	opacity: 0;
 	top: 10px;
@@ -15,7 +16,7 @@
 	left:auto;
 }
  .profile-img:hover button {
-	opacity:1;
+/*	opacity:1;*/
 }
  .profile-img{
 	position:relative;
