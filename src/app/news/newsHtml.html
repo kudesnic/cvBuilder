@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row news-block" *ngIf="!itemId ">
+        <div class="col-md-12">
+         <h1>News</h1>
+            <div class="list-of-news" *ngIf="news">
+                <a class="col-xs-12 item"  routerLink="/news/{{item.id}}" *ngFor="let item of news.items;  let i = index; ">
+                    <h2>{{item.title}}</h2>
+                    <span class="col" style="display:block;float:left">
+                        <span class="col-md-3 text-center image"  style="  display:block;float:left ">
+                            <img style="max-width: 200px; max-height:200px;" src="{{UserHttpService.rootUrl + item.img}}" alt="{{item.title}}">
+                        </span>
+                     <span class="col-md-9 text"  style="  display:block;float:left "
+                           [innerHTML]="rhtmlspecialchars(item.pre_text)"> </span>
+                        <span class="clear"></span>
+                    </span>
+                </a>
+            </div>
+
+        </div>
+        <div class="col-md-12">
+            <ngb-pagination  [collectionSize]="totalCount" [(page)]="currentPage" (pageChange)=" getAllNews(currentPage)" [pageSize]="perPage" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
+        </div>
+    </div>
+    <div class="row post-block" *ngIf="itemId && post " >
+                 <h1 class="col-12 col-xs-12  blue-title">{{post.title}}</h1>
+                <div class="col-3 col-xs-12 text-center" style="" >
+                    <img style="max-width: 100%; max-height:200px; margin:auto " src="{{UserHttpService.rootUrl + post.img}}"
+                         alt="{{post.title}}">
+                </div>
+                <div class="col-9 col-xs-12"   [innerHTML]="rhtmlspecialchars(post.text)"> </div>
+                <div class="col-12 col-xs-12">
+                    <!-- AddToAny BEGIN -->
+                    <h3 class="col-12 col-xs-12 blue-title">Share this article</h3>
+                    <share-container
+                            direction="horizontal"
+                            [expandable]="false"
+                            [textEnabled]="false"
+                            [platforms]="['reddit','twitter','facebook','tumblr','linkedin','pinterest','mail']">
+                    </share-container>
+                    <!-- AddToAny END -->
+                </div>
+    </div>
+
+</div>

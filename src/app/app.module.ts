@@ -7,6 +7,7 @@ import { LinkDirective }  from './directives/link.directive';
 import { HomeComponent } from './home/home.component';
 import { BuilderComponent } from './builder/builder.component';
 import { ResumeComponent } from './resume/resume.component';
+import { NewsComponent } from './news/news.component';
 import { MainTemplateComponent }     from './builder/templates/main-template.component';
 import { CvProfileImgComponent }          from './builder/templates/CvProfileImg.component';
 import { Template1Component }          from './builder/templates/template1.component';
@@ -20,13 +21,15 @@ import { HttpModule }   from '@angular/http';
 import { UserHttpService }          from './services/userHttp.service';
 import { LoginModalService }          from './services/loginModal.service';
 import {ImageCropperComponent} from 'ng2-img-cropper';
-
+import {ShareModule} from 'ng2share/share.module'
 
 const appRoutes: Routes =[
   { path: '', component: HomeComponent},
   { path: 'builder', component: BuilderComponent},
   { path: 'resume/:id', component: BuilderComponent},
-  { path: 'resumes', component: ResumeComponent}
+  { path: 'resumes', component: ResumeComponent},
+  { path: 'news', component: NewsComponent},
+  { path: 'news/:id', component: NewsComponent}
 ];
 
 @NgModule({
@@ -45,10 +48,11 @@ const appRoutes: Routes =[
     BrowserAnimationsModule,
     QuillModule,
     HttpModule,
+    ShareModule
 
 
   ],
-  declarations: [ AppComponent, HomeComponent, BuilderComponent, ResumeComponent, Template1Component, Template2Component,
+  declarations: [ AppComponent, HomeComponent, BuilderComponent, ResumeComponent, NewsComponent, Template1Component, Template2Component,
     MainTemplateComponent, CvProfileImgComponent, LinkDirective, ImageCropperComponent ],
     entryComponents: [],
   bootstrap:    [ AppComponent ],

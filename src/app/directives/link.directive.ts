@@ -12,9 +12,9 @@ export class LinkDirective {
    // @Input() href: string;
     constructor(private elementRef: ElementRef){}
     checkLink(event) {
-        if(this.elementRef.nativeElement.href.indexOf('#') > 0) {
+        if (this.elementRef.nativeElement.href.indexOf('#') > 0) {
             event.preventDefault();
-            if(this.elementRef.nativeElement.classList.contains('nav-link') || this.elementRef.nativeElement.classList.contains('nav-tabs')){
+            if (this.elementRef.nativeElement.classList.contains('nav-link') || this.elementRef.nativeElement.classList.contains('nav-tabs')) {
                 var elements = document.querySelectorAll('.tab-content>.tab-pane');
 
                 for (var i = 0; i < elements.length; i++) {
@@ -27,7 +27,15 @@ export class LinkDirective {
                 document.getElementById(this.elementRef.nativeElement.dataset.ellink).classList.add("active");
                 this.elementRef.nativeElement.classList.add("active")
             }
+            else {
 
+                const element = document.querySelector(this.elementRef.nativeElement.href
+                    .substr(this.elementRef.nativeElement.href.indexOf('#'), this.elementRef.nativeElement.href.length));
+                if (element) {
+                    element.scrollIntoView(element);
+                }
+
+            }
         }
     }
 
